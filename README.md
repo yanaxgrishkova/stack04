@@ -12,7 +12,7 @@ private:
 public:
   - [x] stack(); /* noexcept */
   - [x] size_t count() const /* noexcept */;
-  - [ ] void push(T const &) /*noexcept || strong*/;
+  - [x] void push(T const &) /* strong */;
   - [x] void pop() /* strong */;
   - [x] T top() /* strong */
 private:
