@@ -1,5 +1,7 @@
 # stack@0.0.4
 
+[![Build Status](https://travis-ci.org/yanaxgrishkova/stack04.svg?branch=master)](https://travis-ci.org/yanaxgrishkova/stack04)
+
 - Сделать класс `stack` более безопасным относительно исключений (обеспечивающим строгую гарантию), заменив метод `pop` на два соответствующих `pop` и `top`.
 ```
 template <typename T>
