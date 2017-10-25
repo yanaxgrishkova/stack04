@@ -12,12 +12,12 @@ private:
   size_t array_size_;
   size_t count_;
 public:
-  - [x] stack(); /* noexcept */
-  - [x] size_t count() const /* noexcept */;
-  - [x] void push(T const &) /* strong */;
-  - [x] void pop() /* strong */;
-  - [x] T top() /* strong */
+  stack(); /* noexcept */
+  size_t count() const /* noexcept */;
+  void push(T const &) /* strong */;
+  void pop() /* strong */;
+  T top() /* strong */
 private:
-  - [x] swap( stack & ) /* noexcept */
+  swap( stack & ) /* noexcept */
 };
 ```
