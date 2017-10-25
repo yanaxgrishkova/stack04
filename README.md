@@ -5,16 +5,17 @@
 template <typename T>
 class stack
 {
-public:
-  stack(); /*noexcept || strong*/
-  size_t count() const /*noexcept || strong*/;
-  void push(T const &) /*noexcept || strong*/;
-  void pop() /*noexcept || strong*/;
-  T top() /*noexcept || strong*/
 private:
-  swap( stack & ) /*noexcept || strong*/
   T * array_;
   size_t array_size_;
   size_t count_;
+public:
+  - [x] stack(); /* noexcept */
+  - [x] size_t count() const /* noexcept */;
+  - [ ] void push(T const &) /*noexcept || strong*/;
+  - [x] void pop() /* strong */;
+  - [x] T top() /* strong */
+private:
+  - [x] swap( stack & ) /* noexcept */
 };
 ```
