@@ -14,7 +14,7 @@ private:
 public:
   stack()  /* noexcept */;
   stack(stack<T> const &) /* strong */;
-	stack<T>& operator = (stack<T> const &)  noexcept;
+  stack<T>& operator = (stack<T> const &)  noexcept;
   size_t count() const /* noexcept */;
   void push(T const &) /* strong */;
   void pop() /* strong */;
