@@ -91,17 +91,15 @@ void stack<T>::push(T const& value)
 		
 		try
 		{
-			std::copy(copy.array_, copy.array_ + count_, array_);	
+			std::copy(array_, array_ + count_, temp);	
 		}
 		
 		catch ( ... )
 		{
 			std::cerr << "Error! Try again!" << std::endl;
-			delete[] array_;
+			delete[] temp;
 			throw;
 		}
-		
-		delete[] temp;
 
 		array_size_ = size;
 		delete[] array_;
