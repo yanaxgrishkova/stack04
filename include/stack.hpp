@@ -11,10 +11,13 @@ private:
 
 public:
 	stack() noexcept;
+	stack(stack<T> const &) /* strong */;
+	stack<T>& operator = (stack<T> const &)  noexcept;
 	size_t count() const noexcept;
 	void push(T const &) /* strong */;
-	void pop() /*strong*/;
-	T top() /*strong*/;
+	void pop() /* strong */;
+	T top() /* strong */;
+
 
 private:
 	T* array_;
@@ -30,6 +33,42 @@ template <typename T>
 size_t stack<T>::count() const noexcept
 {
 	return count_;
+}
+
+tempate <typename <T>
+stack<T>::stack(stack<T> const& copy)
+{
+	T temp = new T [copy.array_size_];
+	
+	try
+	{
+		array_ = temp;
+	}
+	
+	catch(const std::exception &e)
+	{
+		std::cout << "Error" << e.what() << std::endl;
+	}
+	
+	if (array_)
+	{
+		count_ = copy.count_;
+		array_size_ = copy.array_size_;
+		
+		delete[] temp;
+	}	
+}
+
+template <typename T>
+stack<T>& stack<T>::operator=(stack<T> const& other)
+{
+	if (this != &other)
+	{
+		stack<T> temp(other);
+		swap(temp);
+	}
+	
+	return *this;
 }
 
 template <typename T>
@@ -58,6 +97,7 @@ void stack<T>::push(T const& value)
 		delete[] array_;
 		array_ = temp;
 	}
+	
 	array_[count_] = value;
 	++count_;
 }
@@ -66,9 +106,13 @@ template <typename T>
 void stack<T>::pop()
 {
 	if (count_ == 0)
+	{
 		throw "Stack is empty! Try again!\n";
+	}
 	else
+	{
 		--count_;
+	}
 }
 
 template <typename T>
