@@ -58,6 +58,7 @@ stack<T>::stack(stack<T> const& copy)
 template <typename T>
 stack<T>& stack<T>::operator=(stack<T> const& other)
 {
+	mutex_.lock();
 	if (this != &other)
 	{
 		stack<T> temp(other);
@@ -65,14 +66,18 @@ stack<T>& stack<T>::operator=(stack<T> const& other)
 	}
 
 	return *this;
+	
+	mutex_.unlock();
 }
 
 template <typename T>
 void stack<T>::swap(stack<T>& other)
 {
+	mutex_.lock();
 	std::swap(array_, other.array_);
 	std::swap(array_size_, other.array_size_);
 	std::swap(count_, other.count_);
+	mutex_.unlock();
 }
 
 template <typename T>
@@ -118,6 +123,7 @@ void stack<T>::pop()
 template <typename T>
 T stack<T>::top()
 {
+	mutex_.lock();
 	if (count_ == 0)
 	{
 		throw "Stack is empty!";
@@ -126,10 +132,14 @@ T stack<T>::top()
 	{
 		return array_[count_ - 1];
 	}
+	mutex_.unlock();
 }
 
 template <typename T>
 bool stack<T>::empty() const
 {
+	mutex_.lock();
 	return (count_ == 0);
+	mutex_.unlock();
+	
 }
