@@ -60,7 +60,7 @@ stack<T>::stack(stack<T> const& copy)
 }
 
 template <typename T>
-stack<T>& stack<T>::operator=(stack<T> const& other)
+stack<T>& stack<T>::operator=(stack<T> const& other) noexcept
 {
 	if (this != &other)
 	{
