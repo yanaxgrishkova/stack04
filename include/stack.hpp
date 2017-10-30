@@ -17,7 +17,7 @@ public:
 	void push(T const &) /* strong */;
 	void pop() /* strong */;
 	T top() /* strong */;
-
+	bool empty() const noexcept;
 
 private:
 	T* array_;
@@ -120,4 +120,10 @@ T stack<T>::top()
 	{
 		return array_[count_ - 1];
 	}
+}
+
+template <typename T>
+bool stack<T>::empty() const noexcept
+{
+	return (count_ == 0); 
 }
