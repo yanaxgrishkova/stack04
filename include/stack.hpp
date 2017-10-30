@@ -50,6 +50,7 @@ stack<T>::stack(stack<T> const& copy)
 	{
 		std::cerr << "Error! Try again!" << std::endl;
 		delete[] array_;
+		throw();
 	}
 }
 
@@ -86,6 +87,7 @@ void stack<T>::push(T const& value)
 
 		T* temp = new T[size];
 		std::copy(array_, array_ + count_, temp);
+		delete[] temp;
 
 		array_size_ = size;
 		delete[] array_;
