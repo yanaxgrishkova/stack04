@@ -46,12 +46,13 @@ stack<T>::stack(stack<T> const& copy)
 	{
 		std::copy(copy.array_, copy.array_ + count_, array_);	
 	}
-	catch( ... )
+	catch ( ... )
 	{
 		std::cerr << "Error! Try again!" << std::endl;
 		delete[] array_;
+		throw;
 	}
-	throw;
+	
 	
 }
 
@@ -87,7 +88,19 @@ void stack<T>::push(T const& value)
 			size = array_size_ * 2;
 
 		T* temp = new T[size];
-		std::copy(array_, array_ + count_, temp);
+		
+		try
+		{
+			std::copy(copy.array_, copy.array_ + count_, array_);	
+		}
+		
+		catch ( ... )
+		{
+			std::cerr << "Error! Try again!" << std::endl;
+			delete[] array_;
+			throw;
+		}
+		
 		delete[] temp;
 
 		array_size_ = size;
