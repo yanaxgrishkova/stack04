@@ -12,7 +12,9 @@ private:
   size_t array_size_;
   size_t count_;
 public:
-  stack(); /* noexcept */
+  stack()  /* noexcept */;
+  stack(stack<T> const &) /* strong */;
+	stack<T>& operator = (stack<T> const &)  noexcept;
   size_t count() const /* noexcept */;
   void push(T const &) /* strong */;
   void pop() /* strong */;
