@@ -50,8 +50,9 @@ stack<T>::stack(stack<T> const& copy)
 	{
 		std::cerr << "Error! Try again!" << std::endl;
 		delete[] array_;
-		throw();
 	}
+	throw;
+	
 }
 
 template <typename T>
