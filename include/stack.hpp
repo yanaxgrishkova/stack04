@@ -39,24 +39,18 @@ template <typename T>
 stack<T>::stack(stack<T> const& copy)
 {
 	T* temp = new T[copy.array_size_];
-	
+	array_size_ = copy.array_size_;
+	count_ = copy.count_;	
+	array_ = temp;
 	try
 	{
-		array_ = temp;
+		std::copy(copy.array_, copy.array_ + count_, array_);	
 	}
-	
-	catch(const std::exception &e)
+	catch( ... )
 	{
-		std::cout << "Error" << e.what() << std::endl;
+		std::cerr << "Error! Try again!" << std::endl;
+		delete[] array_;
 	}
-	
-	if (array_)
-	{
-		count_ = copy.count_;
-		array_size_ = copy.array_size_;
-		
-		delete[] temp;
-	}	
 }
 
 template <typename T>
