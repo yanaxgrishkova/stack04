@@ -38,7 +38,7 @@ size_t stack<T>::count() const noexcept
 template <typename <T>
 stack<T>::stack(stack<T> const& copy)
 {
-	T temp = new T [copy.array_size_];
+	T* temp = new T[copy.array_size_];
 	
 	try
 	{
