@@ -34,12 +34,14 @@ stack<T>::stack() : count_(0), array_size_(0), array_(nullptr)
 template <typename T>
 size_t stack<T>::count() const
 {
+	std::lock_guard<std::mutex> lock(mutex_);
 	return count_;
 }
 
 template <typename T>
 stack<T>::stack(stack<T> const& copy)
 {
+	std::lock_guard<std::mutex> lock(copy.mutex_);
 	T* temp = new T[copy.array_size_];
 	array_size_ = copy.array_size_;
 	count_ = copy.count_;
@@ -58,7 +60,7 @@ stack<T>::stack(stack<T> const& copy)
 template <typename T>
 stack<T>& stack<T>::operator=(stack<T> const& other)
 {
-	mutex_.lock();
+	std::lock(mutex_, other.mutex_);
 	if (this != &other)
 	{
 		stack<T> temp(other);
@@ -68,16 +70,18 @@ stack<T>& stack<T>::operator=(stack<T> const& other)
 	return *this;
 	
 	mutex_.unlock();
+	other.mutex_.unlock();
 }
 
 template <typename T>
 void stack<T>::swap(stack<T>& other)
 {
-	mutex_.lock();
+	std::lock(mutex_, other.mutex_);
 	std::swap(array_, other.array_);
 	std::swap(array_size_, other.array_size_);
 	std::swap(count_, other.count_);
 	mutex_.unlock();
+	other.mutex_.unlock();
 }
 
 template <typename T>
@@ -138,8 +142,6 @@ T stack<T>::top()
 template <typename T>
 bool stack<T>::empty() const
 {
-	mutex_.lock();
-	return (count_ == 0);
-	mutex_.unlock();
-	
+	std::lock_guard<std::mutex> lock(mutex_);
+	return (count_ == 0);	
 }
