@@ -16,8 +16,7 @@ public:
 	stack<T>& operator = (stack<T> const &);
 	size_t count() const;
 	void push(T const &) /* strong */;
-	void pop() /* strong */;
-	T top() /* strong */;
+	auto pop() -> std::shared_ptr<T>; /* strong */;
 	bool empty() const;
 
 private:
@@ -112,8 +111,8 @@ void stack<T>::push(T const& value)
 template <typename T>
 void stack<T>::pop()
 {
-	mutex_.lock();
-	if (count_ == 0)
+	std::lock_guard<std::mutex> lock(mutex_);
+	if (empty())
 	{
 		throw "Stack is empty! Try again!\n";
 	}
@@ -121,7 +120,8 @@ void stack<T>::pop()
 	{
 		--count_;
 	}
-	mutex_.unlock();
+	auto top = std::make_shared<T>(array_[count_ - 1]);
+	return top;
 }
 
 template <typename T>
