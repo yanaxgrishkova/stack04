@@ -109,7 +109,7 @@ void stack<T>::push(T const& value)
 }
 
 template <typename T>
-void stack<T>::pop()
+auto stack<T>::pop() -> std::shared_ptr<T>
 {
 	std::lock_guard<std::mutex> lock(mutex_);
 	if (empty())
