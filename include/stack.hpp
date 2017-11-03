@@ -2,91 +2,83 @@
 #include <stdexcept>
 #include <algorithm>
 #include <utility>
-#include <mutex>
 
 template <typename T>
 class stack
 {
 private:
-	void swap(stack<T> &);
+	void swap(stack<T> &) noexcept;
 
 public:
-	stack();
+	stack() noexcept;
 	stack(stack<T> const &) /* strong */;
-	stack<T>& operator = (stack<T> const &);
-	size_t count() const;
+	stack<T>& operator = (stack<T> const &)  noexcept;
+	size_t count() const noexcept;
 	void push(T const &) /* strong */;
-	auto pop() -> std::shared_ptr<T>; /* strong */;
-	bool empty() const;
+	void pop() /* strong */;
+	T top() /* strong */;
+	bool empty() const noexcept;
 
 private:
-	mutable std::mutex mutex_;
 	T* array_;
 	size_t array_size_;
 	size_t count_;
 };
 
 template <typename T>
-stack<T>::stack() : count_(0), array_size_(0), array_(nullptr)
+stack<T>::stack() noexcept : count_(0), array_size_(0), array_(nullptr)
 {}
 
 template <typename T>
-size_t stack<T>::count() const
+size_t stack<T>::count() const noexcept
 {
-	std::lock_guard<std::mutex> lock(mutex_);
 	return count_;
 }
 
 template <typename T>
 stack<T>::stack(stack<T> const& copy)
 {
-	std::lock_guard<std::mutex> lock(copy.mutex_);
 	T* temp = new T[copy.array_size_];
 	array_size_ = copy.array_size_;
-	count_ = copy.count_;
+	count_ = copy.count_;	
 	array_ = temp;
 	try
 	{
-		std::copy(copy.array_, copy.array_ + count_, array_);
+		std::copy(copy.array_, copy.array_ + count_, array_);	
 	}
-	catch (...)
+	catch ( ... )
 	{
 		std::cerr << "Error! Try again!" << std::endl;
 		delete[] array_;
+		throw;
 	}
+	
+	
 }
 
 template <typename T>
-stack<T>& stack<T>::operator=(stack<T> const& other)
+stack<T>& stack<T>::operator=(stack<T> const& other) noexcept
 {
-	std::lock(mutex_, other.mutex_);
 	if (this != &other)
 	{
 		stack<T> temp(other);
 		swap(temp);
 	}
-
-	return *this;
 	
-	mutex_.unlock();
-	other.mutex_.unlock();
+	return *this;
 }
 
 template <typename T>
-void stack<T>::swap(stack<T>& other)
+void stack<T>::swap(stack<T>& other) noexcept
 {
-	std::lock(mutex_, other.mutex_);
 	std::swap(array_, other.array_);
 	std::swap(array_size_, other.array_size_);
 	std::swap(count_, other.count_);
-	mutex_.unlock();
-	other.mutex_.unlock();
 }
 
 template <typename T>
 void stack<T>::push(T const& value)
 {
-	mutex_.lock();
 	if (array_size_ == count_)
 	{
 		size_t size = array_size_;
@@ -96,23 +88,32 @@ void stack<T>::push(T const& value)
 			size = array_size_ * 2;
 
 		T* temp = new T[size];
-		std::copy(array_, array_ + count_, temp);
+		
+		try
+		{
+			std::copy(array_, array_ + count_, temp);	
+		}
+		
+		catch ( ... )
+		{
+			std::cerr << "Error! Try again!" << std::endl;
+			delete[] temp;
+			throw;
+		}
 
 		array_size_ = size;
 		delete[] array_;
 		array_ = temp;
 	}
-
+	
 	array_[count_] = value;
 	++count_;
-	mutex_.unlock();
 }
 
 template <typename T>
-auto stack<T>::pop() -> std::shared_ptr<T>
+void stack<T>::pop()
 {
-	std::lock_guard<std::mutex> lock(mutex_);
-	if (empty())
+	if (count_ == 0)
 	{
 		throw "Stack is empty! Try again!\n";
 	}
@@ -120,14 +121,11 @@ auto stack<T>::pop() -> std::shared_ptr<T>
 	{
 		--count_;
 	}
-	auto top = std::make_shared<T>(array_[count_ - 1]);
-	return top;
 }
 
 template <typename T>
 T stack<T>::top()
 {
-	mutex_.lock();
 	if (count_ == 0)
 	{
 		throw "Stack is empty!";
@@ -136,12 +134,10 @@ T stack<T>::top()
 	{
 		return array_[count_ - 1];
 	}
-	mutex_.unlock();
 }
 
 template <typename T>
-bool stack<T>::empty() const
+bool stack<T>::empty() const noexcept
 {
-	std::lock_guard<std::mutex> lock(mutex_);
-	return (count_ == 0);	
+	return (count_ == 0); 
 }
